@@ -9,6 +9,7 @@ import { ReplacePipe } from './pipe/replace.pipe';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { RouterModule } from '@angular/router';
 import { Error404Component } from './error-404/error-404.component';
+import { CourseInfoComponent } from './courses/course-info.component';
 
 @NgModule({
   declarations: [
@@ -17,20 +18,25 @@ import { Error404Component } from './error-404/error-404.component';
     StarComponent, 
     ReplacePipe, 
     NavBarComponent, 
-    Error404Component
+    Error404Component, 
+    CourseInfoComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     RouterModule.forRoot([
-      //objeto de rota padrão vazia, que inicializa na raiz, e redireciona para a rota de cursos
-      {
-        path: '', redirectTo: 'courses', pathMatch: 'full'
-      },
       //objeto de rota criada que faz o link com o componente de cursos
       {
         path: 'courses', component: CourseListComponent
       },
+      //rota com path variable, utiliza-se /:nome-do-atributo e o componente que irá utilizar
+      {
+        path: 'courses/info/:id', component: CourseInfoComponent
+      },
+      //objeto de rota padrão vazia, que inicializa na raiz, e redireciona para a rota de cursos
+      {
+        path: '', redirectTo: 'courses', pathMatch: 'full'
+      },      
       //objeto de rota padrão do angular usada quando o angular não encontar uma url definida 
       {
         path: '**', component: Error404Component
