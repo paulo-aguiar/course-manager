@@ -1,24 +1,34 @@
 import { Course } from './course';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { identifierName } from '@angular/compiler';
 
 // injeção de dependência que faz com que este serviço seja carregado na 'root'
 @Injectable({
   providedIn: 'root',
 })
 export class CourseService {
-  //método estático que traz todos os cursos cadastrados
-  retrieveAll(): Course[] {
-    return COURSES;
+
+  private courseUrl: string = 'http://localhost:3100/api/courses';
+
+  //classe htttpClient via injeção de dependência
+  constructor(private httpClient: HttpClient) { }
+
+  //método que traz todos os cursos cadastrados
+  retrieveAll(): Observable<Course[]> {
+    return this.httpClient.get<Course[]>(this.courseUrl); 
   }
 
-  retrieveById(id: number): Course {
-    return COURSES.find( (courseItereator: Course) => courseItereator.id === id)!;
+  retrieveById(id: number): Observable<Course> {
+    return this.httpClient.get<Course>(` ${this.courseUrl}/${id}`);
   }
 
-  save(course: Course): void {
+  save(course: Course): Observable<Course> {
     if(course.id) {
-      const index = COURSES.findIndex((courseItereator: Course) => courseItereator.id === course.id);
-      COURSES[index] = course;
+      return this.httpClient.put<Course>(`${this.courseUrl}/${course.id}`, course);
+    } else {
+      return this.httpClient.post<Course>(`${this.courseUrl}`, course);
     }
   }
 }
